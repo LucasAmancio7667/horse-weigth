@@ -45,7 +45,7 @@ Web em http://localhost:5173, API em http://localhost:8000 (documentação em `/
 
 ```bash
 # 1. Emulador do Blob Storage
-npx azurite-blob --location azurite-data
+npx -p azurite azurite-blob --skipApiVersionCheck --location azurite-data
 
 # 2. API
 cd backend
