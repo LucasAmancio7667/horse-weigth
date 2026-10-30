@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Dados locais
+backend/data/
+*.db
+
+# Ambiente
+.env
+
+# Node
+node_modules/
+frontend/dist/
+
+# Azurite (emulador de blob)
+__azurite_db_*.json
+__blobstorage__/
+__queuestorage__/
+azurite-data/
