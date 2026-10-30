@@ -1,50 +1,50 @@
-# Peso do Cavalo
+# Horse Weight
 
-App que estima o peso de um cavalo a partir de uma foto lateral. Este repositório está no fim da **Sprint 1**: ambiente, API, banco modelado, Blob Storage e teste isolado do marcador ArUco.
+An app that estimates a horse's weight from a side-view photo. This repository is at the end of **Sprint 1**: environment, API, database model, Blob Storage and an isolated test of the ArUco marker.
 
 ## Stack
 
-| Camada | Tecnologia |
+| Layer | Technology |
 | --- | --- |
-| Cliente | React + Vite (PWA na Sprint 2) |
+| Client | React + Vite (PWA in Sprint 2) |
 | API | FastAPI (Python) |
-| Banco | SQLite via SQLAlchemy 2 |
-| Imagens | Azure Blob Storage (emulador Azurite no desenvolvimento) |
-| Visão | OpenCV com marcador ArUco |
+| Database | SQLite via SQLAlchemy 2 |
+| Images | Azure Blob Storage (Azurite emulator in development) |
+| Vision | OpenCV with an ArUco marker |
 
-## Estrutura
+## Structure
 
 ```
 backend/
   app/
-    main.py          # app FastAPI, CORS, criação das tabelas
-    config.py        # configurações (variáveis de ambiente / .env)
-    db.py            # engine e sessão
+    main.py          # FastAPI app, CORS, table creation
+    config.py        # settings (environment variables / .env)
+    db.py            # engine and session
     models.py        # Animal, Photo, Landmark, Measurement, WeightEstimate
-    schemas.py       # validação de entrada e saída
+    schemas.py       # input and output validation
     storage.py       # Azure Blob (upload, download, health)
-    routers/         # /api/health e /api/animals
-    vision/aruco.py  # detecção do marcador e escala px/cm
+    routers/         # /api/health and /api/animals
+    vision/aruco.py  # marker detection and px/cm scale
   scripts/aruco_demo.py
   tests/
-frontend/            # React + Vite, tela de estado do sistema
+frontend/            # React + Vite, system status page
 docker-compose.yml   # azurite + api + web
 ```
 
-## Como rodar
+## Running
 
-### Com Docker
+### With Docker
 
 ```bash
 docker compose up --build
 ```
 
-Web em http://localhost:5173, API em http://localhost:8000 (documentação em `/docs`).
+Web at http://localhost:5173, API at http://localhost:8000 (docs at `/docs`).
 
-### Sem Docker (três terminais)
+### Without Docker (three terminals)
 
 ```bash
-# 1. Emulador do Blob Storage
+# 1. Blob Storage emulator
 npx -p azurite azurite-blob --skipApiVersionCheck --location azurite-data
 
 # 2. API
@@ -59,33 +59,33 @@ npm install
 npm run dev
 ```
 
-Os valores padrão já apontam para o Azurite local e para um SQLite em `backend/data/`. Para mudar algo, copie `.env.example` para `backend/.env`.
+The default values already point to the local Azurite and to a SQLite file in `backend/data/`. To change anything, copy `.env.example` to `backend/.env`.
 
-## Testes
+## Tests
 
 ```bash
 cd backend && pytest
 ```
 
-Cobrem a API (saúde, cadastro, validação), o modelo de dados (relações, cascata, restrições) e o ArUco (escala, rotação, ausência de marcador).
+They cover the API (health, registration, validation), the data model (relations, cascade, constraints) and ArUco (scale, rotation, missing marker).
 
-## Teste do ArUco
+## ArUco test
 
 ```bash
 cd backend
-python scripts/aruco_demo.py                    # gera marker_0.png e uma cena de teste
-python scripts/aruco_demo.py foto.jpg 10        # detecta numa foto sua (lado real em cm)
+python scripts/aruco_demo.py                    # generates marker_0.png and a test scene
+python scripts/aruco_demo.py photo.jpg 10       # detects in your own photo (real side length in cm)
 ```
 
-Ao imprimir `marker_0.png`, **meça com régua o lado do quadrado preto** (sem a margem branca). Esse valor é o `marker_size_cm` usado no cálculo da escala.
+When printing `marker_0.png`, **measure the side of the black square with a ruler** (without the white margin). That value is the `marker_size_cm` used in the scale calculation.
 
-## Decisões da Sprint 1
+## Sprint 1 decisions
 
-- **Tabelas criadas no startup** (`create_all`). Se o esquema começar a mudar com frequência, trocar por Alembic.
-- **Peso real da balança** é um campo opcional em `Photo`, para a coleta futura entrar sem alterar o esquema.
-- **`/api/health`** devolve o estado do banco e do storage separadamente; a API é considerada de pé se o banco responde.
-- **Escala** vem do lado médio do marcador em pixels dividido pelo tamanho real em cm; com vários marcadores, usa o maior.
+- **Tables created at startup** (`create_all`). If the schema starts changing often, switch to Alembic.
+- **Actual scale weight** is an optional field on `Photo`, so future data collection can be added without changing the schema.
+- **`/api/health`** reports the state of the database and the storage separately; the API is considered up if the database responds.
+- **Scale** comes from the marker's average side length in pixels divided by its real size in cm; with several markers, the largest one is used.
 
-## Próxima: Sprint 2
+## Next: Sprint 2
 
-Cliente PWA com câmera, upload da foto para o Blob, registro no banco, listagem de fotos e escala px/cm calculada no backend.
+PWA client with camera, photo upload to Blob, database registration, photo listing and the px/cm scale computed on the backend.
